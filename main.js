@@ -79,7 +79,7 @@ function addTextOnImage(text) {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.drawImage($('img').get(0), 0, 0);
         ctx.fillStyle = "#000";
-        ctx.fillText(text,25,170);
+        ctx.fillText(text, xAxis, yAxis);
         resolve();
     });
 }
