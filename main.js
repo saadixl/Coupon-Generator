@@ -36,19 +36,26 @@ $(document).ready(function() {
         renderImageOnCanvas();
     });
 
-    $('button').click(function(e){
+    $('button').click(async function(e){
         e.preventDefault();
-        const codeList = $("#tarea").val();
-        codeList.split('\n').forEach((code, i) => {
-            setTimeout(function() {
-                addTextOnImage(code).then(function() {
-                    downloadImage(i);
-                });
-            }, 100);
-        });
-
+        const codeList = $("#tarea").val().split('\n');
+        recurLoop(codeList, codeList.length-1);
     });
 });
+
+function recurLoop(codeList, i) {
+    if(i === 0) {
+        return;
+    } else {
+        setTimeout(function() {
+            const code = codeList[i];
+            addTextOnImage(code).then(function() {
+                downloadImage(i);
+                recurLoop(codeList, i-1);
+            });
+        }, 100);
+    }
+}
 
 function renderImageOnCanvas() {
     canvas = document.getElementById('canvas');
@@ -74,7 +81,7 @@ function renderTextOnCanvase(config) {
     
 }
 
-function addTextOnImage(text) {
+async function addTextOnImage(text) {
     return new Promise(function(resolve, reject) {
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.drawImage($('img').get(0), 0, 0);
@@ -84,7 +91,7 @@ function addTextOnImage(text) {
     });
 }
 
-function downloadImage(i) {
+async function downloadImage(i) {
     var image = canvas.toDataURL();
     var tmpLink = document.createElement( 'a' );  
     tmpLink.download = 'code' + i + '.png';
@@ -92,4 +99,13 @@ function downloadImage(i) {
     document.body.appendChild( tmpLink );  
     tmpLink.click();  
     document.body.removeChild( tmpLink );
+}
+
+async function pause(i) {
+    console.log("pausing");
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, i*1000);
+    })
 }
