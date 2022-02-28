@@ -44,7 +44,7 @@ $(document).ready(function() {
 });
 
 function recurLoop(codeList, i) {
-    if(i === 0) {
+    if(i < 0) {
         return;
     } else {
         setTimeout(function() {
